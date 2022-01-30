@@ -3,6 +3,7 @@ require_once 'helpers.php';
 $is_auth = rand(0, 1);
 
 $user_name = 'Рома'; // укажите здесь ваше имя
+$lengs_text = 300;
 
 $one_post = [
     [
@@ -108,7 +109,7 @@ $one_post = [
                             </div>
                             <div class="header__profile-name">
                                 <span>
-                                    <!--здесь должно быть имя пользователя-->
+                                    <?= $user_name; ?>
                                 </span>
                                 <svg class="header__link-arrow" width="10" height="6">
                                     <use xlink:href="#icon-arrow-right-ad"></use>
@@ -257,8 +258,42 @@ $one_post = [
                         <cite>Неизвестный Автор</cite>
                     </blockquote>
                     <?php elseif ($index['type'] === 'post-text'): ?>
+
+                    <?php
+
+                        if(mb_strlen($index['content']) < $lengs_text){
+                            $string = $index['content'];
+                            $link = false;
+                        } else {
+                            $text = $index['content'];
+                            function cut_text($text, $lengs_text) {
+                                $arr_string = explode(" ", $text);
+                                $item = 0;
+                                $summ = 0;
+                                while ($item < count($arr_string)) {
+                                  $summ_element = mb_strlen($arr_string[$item]);
+                                  $summ += $summ_element;
+                                  if ($summ > $lengs_text) {
+                                    $arr_string = array_slice($arr_string, 0, $item);
+                                    $item = count($arr_string);
+                                  }
+                                  $item += 1;
+                                }
+                                $string = implode(" ", $arr_string);
+                                $string .= '...';
+                                return $string;
+                              }
+                            $link = true;
+                            $string = cut_text($text, $lengs_text);
+                        }
+                    ?>
                     <!--содержимое для поста-текста-->
-                    <p><?= $index['content'] ?></p>
+
+                    <p><?= $string; ?></p>
+                    <?php if($link): ?>
+                      <a class="post-text__more-link" href="#">Читать далее</a>
+                    <?php endif; ?>
+
                     <?php elseif ($index['type'] === 'post-photo'): ?>
                     <!--содержимое для поста-фото-->
                     <div class="post-photo__image-wrapper">
