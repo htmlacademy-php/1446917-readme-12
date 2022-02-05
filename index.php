@@ -3,7 +3,6 @@ require_once 'helpers.php';
 $is_auth = rand(0, 1);
 
 $user_name = 'Рома'; // укажите здесь ваше имя
-$lengs_text = 300;
 
 $one_post = [
     [
