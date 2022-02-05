@@ -16,7 +16,7 @@ $one_post = [
     [
         'title'   => 'Игра престолов',
         'type'    => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
+        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала!!',
         'name'    => 'Владик',
         'avatar'  => 'userpic.jpg'
     ],
@@ -42,6 +42,24 @@ $one_post = [
         'avatar'  => 'userpic.jpg'
     ],
 ];
+
+
+function cut_text($text, $max_length) {
+  if (mb_strlen($text) < $max_length){
+    return  $text;
+  } else {
+    $words = explode(" ", $text);
+    $current_length = 0;
+    foreach ($words as $key => $value) {
+      $current_length += mb_strlen($value);
+      if ($current_length > $max_length) {
+        $words = array_slice($words, 0, $key);
+        break;
+      }
+    }
+    return implode(" ", $words) . '...' . '<a class="post-text__more-link" href="#">Читать далее</a>';
+  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -258,42 +276,8 @@ $one_post = [
                         <cite>Неизвестный Автор</cite>
                     </blockquote>
                     <?php elseif ($index['type'] === 'post-text'): ?>
-
-                    <?php
-
-                        if(mb_strlen($index['content']) < $lengs_text){
-                            $string = $index['content'];
-                            $link = false;
-                        } else {
-                            $text = $index['content'];
-                            function cut_text($text, $lengs_text) {
-                                $arr_string = explode(" ", $text);
-                                $item = 0;
-                                $summ = 0;
-                                while ($item < count($arr_string)) {
-                                  $summ_element = mb_strlen($arr_string[$item]);
-                                  $summ += $summ_element;
-                                  if ($summ > $lengs_text) {
-                                    $arr_string = array_slice($arr_string, 0, $item);
-                                    $item = count($arr_string);
-                                  }
-                                  $item += 1;
-                                }
-                                $string = implode(" ", $arr_string);
-                                $string .= '...';
-                                return $string;
-                              }
-                            $link = true;
-                            $string = cut_text($text, $lengs_text);
-                        }
-                    ?>
                     <!--содержимое для поста-текста-->
-
-                    <p><?= $string; ?></p>
-                    <?php if($link): ?>
-                      <a class="post-text__more-link" href="#">Читать далее</a>
-                    <?php endif; ?>
-
+                    <p><?= cut_text($index['content'], 300) ?></p>
                     <?php elseif ($index['type'] === 'post-photo'): ?>
                     <!--содержимое для поста-фото-->
                     <div class="post-photo__image-wrapper">
