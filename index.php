@@ -15,7 +15,7 @@ $one_post = [
     [
         'title'   => 'Игра престолов',
         'type'    => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
+        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала! Не могу дождаться начала финального сезона своего любимого сериала!!',
         'name'    => 'Владик',
         'avatar'  => 'userpic.jpg'
     ],
@@ -41,6 +41,24 @@ $one_post = [
         'avatar'  => 'userpic.jpg'
     ],
 ];
+
+
+function cut_text($text, $max_length) {
+  if (mb_strlen($text) < $max_length){
+    return  $text;
+  } else {
+    $words = explode(" ", $text);
+    $current_length = 0;
+    foreach ($words as $key => $value) {
+      $current_length += mb_strlen($value);
+      if ($current_length > $max_length) {
+        $words = array_slice($words, 0, $key);
+        break;
+      }
+    }
+    return implode(" ", $words) . '...' . '<a class="post-text__more-link" href="#">Читать далее</a>';
+  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -258,7 +276,7 @@ $one_post = [
                     </blockquote>
                     <?php elseif ($index['type'] === 'post-text'): ?>
                     <!--содержимое для поста-текста-->
-                    <p><?= $index['content'] ?></p>
+                    <p><?= cut_text($index['content'], 300) ?></p>
                     <?php elseif ($index['type'] === 'post-photo'): ?>
                     <!--содержимое для поста-фото-->
                     <div class="post-photo__image-wrapper">
